@@ -1,0 +1,6 @@
+{
+  "name": "Las Cabanas Resort Pushkar",
+  "description": "Luxury resort website in Pushkar, Rajasthan with real-time room booking, mobile OTP authentication, simulated payment gateway, guest preferences, AI concierge, and admin management dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
