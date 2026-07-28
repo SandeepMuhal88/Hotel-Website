@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, ArrowRight, ArrowLeft, CheckCircle2, QrCode, CreditCard, Building2, Printer, AlertCircle } from 'lucide-react';
 import { ADD_ONS, RESORT_INFO } from '../data/resortData.js';
+import { createBooking } from '../services/localApi.js';
 
 export default function BookingModal({
   isOpen,
@@ -94,25 +95,19 @@ export default function BookingModal({
     setErrorMsg('');
 
     try {
-      const res = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user?.id,
-          roomTypeId: activeRoom.id,
-          checkIn,
-          checkOut,
-          guests,
-          guestName,
-          guestPhone,
-          guestEmail,
-          specialRequests,
-          selectedAddOns: selectedAddOnsList.map(a => ({ id: a.id, quantity: 1 })),
-          paymentMethod
-        })
+      const data = await createBooking({
+        userId: user?.id,
+        roomTypeId: activeRoom.id,
+        checkIn,
+        checkOut,
+        guests,
+        guestName,
+        guestPhone,
+        guestEmail,
+        specialRequests,
+        selectedAddOns: selectedAddOnsList.map(a => ({ id: a.id, quantity: 1 })),
+        paymentMethod,
       });
-
-      const data = await res.json();
 
       if (data.success && data.booking) {
         setCreatedBooking(data.booking);
@@ -122,7 +117,7 @@ export default function BookingModal({
         setErrorMsg(data.error || 'Failed to complete booking.');
       }
     } catch (err) {
-      setErrorMsg('Payment gateway connection error. Please try again.');
+      setErrorMsg('Booking error. Please try again.');
     } finally {
       setIsProcessingPayment(false);
     }

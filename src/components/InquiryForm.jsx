@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, User, Send, CheckCircle2, Sparkles, Building } from 'lucide-react';
 import { RESORT_INFO } from '../data/resortData.js';
+import { submitInquiry } from '../services/localApi.js';
 
 export default function InquiryForm() {
   const [formData, setFormData] = useState({
@@ -24,12 +25,7 @@ export default function InquiryForm() {
     setErrorMsg('');
 
     try {
-      const res = await fetch('/api/inquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      const data = await res.json();
+      const data = await submitInquiry(formData);
 
       if (data.success) {
         setSuccessMsg('Your inquiry has been submitted! Our reservation team will call you shortly.');

@@ -4,24 +4,6 @@
   "installCommand": "npm install",
   "framework": null,
   "rewrites": [
-    { "source": "/api/health",                           "destination": "/api/health" },
-    { "source": "/api/auth/send-otp",                   "destination": "/api/auth/send-otp" },
-    { "source": "/api/auth/verify-otp",                 "destination": "/api/auth/verify-otp" },
-    { "source": "/api/user/profile/:mobileNumber",      "destination": "/api/user/profile/[mobileNumber]" },
-    { "source": "/api/user/preferences",                "destination": "/api/user/preferences" },
-    { "source": "/api/rooms",                           "destination": "/api/rooms/index" },
-    { "source": "/api/rooms/check-availability",        "destination": "/api/rooms/check-availability" },
-    { "source": "/api/bookings",                        "destination": "/api/bookings/index" },
-    { "source": "/api/bookings/user/:mobileNumber",     "destination": "/api/bookings/user/[mobileNumber]" },
-    { "source": "/api/bookings/:id/cancel",             "destination": "/api/bookings/[id]/cancel" },
-    { "source": "/api/inquiries",                       "destination": "/api/inquiries/index" },
-    { "source": "/api/admin/stats",                     "destination": "/api/admin/stats" },
-    { "source": "/api/admin/bookings",                  "destination": "/api/admin/bookings/index" },
-    { "source": "/api/admin/bookings/:id/status",       "destination": "/api/admin/bookings/[id]/status" },
-    { "source": "/api/admin/rooms/:id",                 "destination": "/api/admin/rooms/[id]" },
-    { "source": "/api/admin/inquiries",                 "destination": "/api/admin/inquiries/index" },
-    { "source": "/api/admin/inquiries/:id/reply",       "destination": "/api/admin/inquiries/[id]/reply" },
-    { "source": "/api/concierge/chat",                  "destination": "/api/concierge/chat" },
-    { "source": "/(.*)",                                "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

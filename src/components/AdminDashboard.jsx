@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Calendar, Users, Building, MessageSquare, DollarSign, RefreshCw, Search, Edit3 } from 'lucide-react';
+import { getAdminData, updateBookingStatus, updateRoom, replyInquiry } from '../services/localApi.js';
 
 export default function AdminDashboard({ onClose }) {
   const [activeTab, setActiveTab] = useState('overview');
@@ -26,22 +27,11 @@ export default function AdminDashboard({ onClose }) {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [statsRes, bookingsRes, roomsRes, inqRes] = await Promise.all([
-        fetch('/api/admin/stats'),
-        fetch('/api/admin/bookings'),
-        fetch('/api/rooms'),
-        fetch('/api/admin/inquiries')
-      ]);
-
-      const statsData = await statsRes.json();
-      const bookingsData = await bookingsRes.json();
-      const roomsData = await roomsRes.json();
-      const inqData = await inqRes.json();
-
-      setStats(statsData);
-      setBookings(bookingsData.bookings || []);
-      setRooms(roomsData.rooms || []);
-      setInquiries(inqData.inquiries || []);
+      const data = await getAdminData();
+      setStats(data.stats);
+      setBookings(data.bookings || []);
+      setRooms(data.rooms || []);
+      setInquiries(data.inquiries || []);
     } catch (err) {
       console.error('Admin fetch error:', err);
     } finally {
@@ -51,15 +41,8 @@ export default function AdminDashboard({ onClose }) {
 
   const handleUpdateBookingStatus = async (id, status) => {
     try {
-      const res = await fetch(`/api/admin/bookings/${id}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-      });
-      const data = await res.json();
-      if (data.success) {
-        fetchAdminData();
-      }
+      const data = await updateBookingStatus(id, status);
+      if (data.success) fetchAdminData();
     } catch (err) {
       console.error('Status update error:', err);
     }
@@ -67,15 +50,7 @@ export default function AdminDashboard({ onClose }) {
 
   const handleSaveRoomUpdate = async (roomId) => {
     try {
-      const res = await fetch(`/api/admin/rooms/${roomId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          price: newRoomPrice,
-          availableUnits: newRoomAvailable
-        })
-      });
-      const data = await res.json();
+      const data = await updateRoom(roomId, { price: newRoomPrice, availableUnits: newRoomAvailable });
       if (data.success) {
         setEditingRoomId(null);
         fetchAdminData();
@@ -87,15 +62,7 @@ export default function AdminDashboard({ onClose }) {
 
   const handleReplyInquiry = async (inqId) => {
     try {
-      const res = await fetch(`/api/admin/inquiries/${inqId}/reply`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          adminReply: replyText,
-          status: 'Replied'
-        })
-      });
-      const data = await res.json();
+      const data = await replyInquiry(inqId, replyText, 'Replied');
       if (data.success) {
         setReplyInquiryId(null);
         setReplyText('');

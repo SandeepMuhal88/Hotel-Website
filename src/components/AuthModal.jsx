@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Smartphone, ArrowRight, Sparkles } from 'lucide-react';
+import { sendOtp, verifyOtp } from '../services/localApi.js';
 
 export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   const [step, setStep] = useState('mobile');
@@ -17,15 +18,8 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
     e.preventDefault();
     setLoading(true);
     setError('');
-
     try {
-      const res = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobileNumber })
-      });
-      const data = await res.json();
-
+      const data = await sendOtp(mobileNumber);
       if (data.success) {
         setSimulatedOtp(data.simulatedOtp || '123456');
         setOtp(data.simulatedOtp || '123456');
@@ -44,20 +38,8 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
     e.preventDefault();
     setLoading(true);
     setError('');
-
     try {
-      const res = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mobileNumber,
-          otp,
-          name,
-          email
-        })
-      });
-      const data = await res.json();
-
+      const data = await verifyOtp(mobileNumber, otp, name, email);
       if (data.success) {
         onLoginSuccess(data.user);
         onClose();

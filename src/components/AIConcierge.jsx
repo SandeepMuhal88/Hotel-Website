@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, X, Send, Bot, User } from 'lucide-react';
+import { conciergeChat } from '../services/localApi.js';
 
 export default function AIConcierge() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,26 +34,16 @@ export default function AIConcierge() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/concierge/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: query })
-      });
-      const data = await res.json();
-
-      const botMsg = {
+      const data = await conciergeChat(query);
+      setMessages(prev => [...prev, {
         sender: 'bot',
-        text: data.text || "I'd be happy to assist you with your stay at Las Cabanas Resort! Call our front desk at +91 063672 76121 for immediate bookings."
-      };
-      setMessages(prev => [...prev, botMsg]);
+        text: data.text || "I'd be happy to assist! Call our front desk at +91 063672 76121 for immediate help."
+      }]);
     } catch (err) {
-      setMessages(prev => [
-        ...prev,
-        {
-          sender: 'bot',
-          text: "Namaste! For immediate assistance, feel free to call our 24/7 Front Desk at +91 063672 76121."
-        }
-      ]);
+      setMessages(prev => [...prev, {
+        sender: 'bot',
+        text: 'Namaste! For immediate assistance, please call our 24/7 Front Desk at +91 063672 76121.'
+      }]);
     } finally {
       setLoading(false);
     }

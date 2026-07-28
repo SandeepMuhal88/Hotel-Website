@@ -1,7 +1,0 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { dbRooms } from '../_data.js';
-
-export default function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
-  res.json({ rooms: dbRooms });
-}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
 import CottagesSection from './components/CottagesSection.jsx';
@@ -44,21 +44,6 @@ export function App() {
   const [searchGuests, setSearchGuests] = useState(2);
   const [calculateNights, setCalculateNights] = useState(1);
 
-  useEffect(() => {
-    fetchRooms();
-  }, []);
-
-  const fetchRooms = async () => {
-    try {
-      const res = await fetch('/api/rooms');
-      const data = await res.json();
-      if (data.rooms) {
-        setRooms(data.rooms);
-      }
-    } catch (err) {
-      console.error('Error fetching rooms:', err);
-    }
-  };
 
   const handleSearchAvailability = (checkIn, checkOut, guests, category) => {
     setSearchCheckIn(checkIn);
@@ -168,7 +153,7 @@ export function App() {
           setIsAuthOpen(true);
         }}
         onBookingConfirmed={(booking) => {
-          fetchRooms(); // refresh available room count
+          // Room availability updates are handled client-side in localApi
         }}
       />
 

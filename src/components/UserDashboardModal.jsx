@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, CheckCircle2, Printer, Settings } from 'lucide-react';
+import { getUserBookings, updatePreferences, cancelBooking } from '../services/localApi.js';
 
 export default function UserDashboardModal({
   isOpen,
@@ -29,11 +30,8 @@ export default function UserDashboardModal({
   const fetchUserBookings = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/bookings/user/${encodeURIComponent(user.mobileNumber)}`);
-      const data = await res.json();
-      if (data.bookings) {
-        setUserBookings(data.bookings);
-      }
+      const data = await getUserBookings(user.mobileNumber);
+      if (data.bookings) setUserBookings(data.bookings);
     } catch (err) {
       console.error('Error fetching bookings:', err);
     } finally {
@@ -44,15 +42,7 @@ export default function UserDashboardModal({
   const handleSavePreferences = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/user/preferences', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mobileNumber: user.mobileNumber,
-          preferences
-        })
-      });
-      const data = await res.json();
+      const data = await updatePreferences({ mobileNumber: user.mobileNumber, preferences });
       if (data.success) {
         onUpdatePreferences(preferences);
         setSaveSuccess(true);
@@ -66,13 +56,8 @@ export default function UserDashboardModal({
   const handleCancelBooking = async (bookingId) => {
     if (!confirm('Are you sure you want to request cancellation for this booking?')) return;
     try {
-      const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
-        method: 'PUT'
-      });
-      const data = await res.json();
-      if (data.success) {
-        fetchUserBookings();
-      }
+      const data = await cancelBooking(bookingId);
+      if (data.success) fetchUserBookings();
     } catch (err) {
       console.error('Cancel error:', err);
     }
