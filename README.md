@@ -1,9 +1,3 @@
-# Dune & Palm — Desert Oasis Resort Website
-
-Ye ek **Resort-type Hotel** ka one-page marketing + booking-enquiry website hai. Resort ka naam **"Dune & Palm"** rakha hai — Rajasthan ke Thar desert mein ek chhota, spring-fed oasis resort, jisme 40 courtyard suites hain. Neeche pura plan hai ki site kaise design ki gayi, kaise kaam karti hai, aur isse aage kaise le jaya ja sakta hai.
-
----
-
 ## 1. Ye "Resort type" hotel kyu hai (not a city hotel)
 
 Resort aur city/business hotel ke website ki zaroorat alag hoti hai:
